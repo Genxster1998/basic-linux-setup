@@ -59,7 +59,7 @@ printf 'y\n' | sudo dpkg-reconfigure dash
 sudo aptitude -f install -y ureadahead
 sudo aptitude -f install -y kexec-tools
 sudo apt -f install -y && sudo apt --fix-missing install -y
-printf 'y\ny\n' | sudo dpkg-reconfigure kexec-tools
+#printf 'y\ny\n' | sudo dpkg-reconfigure kexec-tools
 
 
 
@@ -77,13 +77,13 @@ sudo aptitude -f install -y git curl
 ####### EULA LICENSE AGREEMENTS #####################################################################
 #####################################################################################################
 ### take care of licenses first  #
-sudo apt update                  #
-echo -e "${yellow}"              #
-echo LICENSES                    #
-echo -e "${restore}"             #
-##################################
-echo ttf-mscorefonts-installer ttf-mscorefonts-installer/accepted-ttf-mscorefonts-installer-eula select true | sudo debconf-set-selections
-sudo aptitude -f install -y ttf-mscorefonts-installer
+# sudo apt update                  #
+# echo -e "${yellow}"              #
+# echo LICENSES                    #
+# echo -e "${restore}"             #
+# ##################################
+# echo ttf-mscorefonts-installer ttf-mscorefonts-installer/accepted-ttf-mscorefonts-installer-eula select true | sudo debconf-set-selections
+# sudo aptitude -f install -y ttf-mscorefonts-installer
 
 
 
@@ -91,131 +91,131 @@ sudo aptitude -f install -y ttf-mscorefonts-installer
 ####### SYSTEM CONFIGURATION ########################################################################
 #####################################################################################################
 ### configure system customization
-echo -e "${yellow}"              #
-echo MINOR SYSTEM CUSTOMIZATION  #
-echo -e "${restore}"             #
-##################################
-echo -e "${yellow}"              #
-echo setting up weekly fstrim... #
-echo -e "${restore}"             #
-##################################
-### trigger weekly fstrim
-sudo systemctl start fstrim.timer
+# echo -e "${yellow}"              #
+# echo MINOR SYSTEM CUSTOMIZATION  #
+# echo -e "${restore}"             #
+# ##################################
+# echo -e "${yellow}"              #
+# echo setting up weekly fstrim... #
+# echo -e "${restore}"             #
+# ##################################
+# ### trigger weekly fstrim
+# sudo systemctl start fstrim.timer
 
-### set up init.sh for kernel configuration #########################################
-echo -e "${yellow}"                                                                 #
-echo setting up userspace kernel configuration                                      #
-echo on root filesystem /init.sh can be found, adjust it to your needs if necessary #
-echo -e "${restore}"                                                                #
-#####################################################################################
-cd $basicsetup
-#
-sudo aptitude -f install -y rsync
+# ### set up init.sh for kernel configuration #########################################
+# echo -e "${yellow}"                                                                 #
+# echo setting up userspace kernel configuration                                      #
+# echo on root filesystem /init.sh can be found, adjust it to your needs if necessary #
+# echo -e "${restore}"                                                                #
+# #####################################################################################
+# cd $basicsetup
+# #
+# sudo aptitude -f install -y rsync
 
-chmod +x init.sh
-sudo \cp init.sh /init.sh
-cd / && sudo ./init.sh
-cd $basicsetup
-if grep -q "@reboot root -l /init.sh" /etc/crontab
-then
-echo "Flag exists"
-else
-sudo sed -i "\$a@reboot root /init.sh" /etc/crontab
-fi
+# chmod +x init.sh
+# sudo \cp init.sh /init.sh
+# cd / && sudo ./init.sh
+# cd $basicsetup
+# if grep -q "@reboot root -l /init.sh" /etc/crontab
+# then
+# echo "Flag exists"
+# else
+# sudo sed -i "\$a@reboot root /init.sh" /etc/crontab
+# fi
 
-### copy wallpaper & grub splash
-sudo rsync -v -K -a --force  MalakasUniverse /usr/share/wallpapers
-sudo \cp -rf  splash.jpg /boot/grub
+# ### copy wallpaper & grub splash
+# sudo rsync -v -K -a --force  MalakasUniverse /usr/share/wallpapers
+# sudo \cp -rf  splash.jpg /boot/grub
 
-### copy kde optimal preconfiguration
-sudo rsync -v -K -a --force --include=".*" .config ~/
-sudo rsync -v -K -a --force --include=".*" .kde ~/
-sudo rsync -v -K -a --force --include=".*" .local ~/
-sudo rsync -v -K -a --force --include=".*" .gtkrc-2.0 ~/
+# ### copy kde optimal preconfiguration
+# sudo rsync -v -K -a --force --include=".*" .config ~/
+# sudo rsync -v -K -a --force --include=".*" .kde ~/
+# sudo rsync -v -K -a --force --include=".*" .local ~/
+# sudo rsync -v -K -a --force --include=".*" .gtkrc-2.0 ~/
 
-### fix ownership preconfig - rare cases
-cd ~/ && sudo chown -R $(id -u):$(id -g) $HOME
-
-
-####### FIREFOX CONFIGURATION
-### installation firefox addons, install as firefox opens. close firefox and reclick on console ###############
-echo -e "${magenta}"                                                                                          #
-echo INSTALL FIREFOX ADDONS ONE BY ONE, AFTER CLOSE FIREFOX AND CLICK ON CLI TILL ALL ADDONS ARE INSTALLED!!! #
-echo -e "${restore}"                                                                                          #
-###############################################################################################################
-sudo pkill firefox
-echo sorry for that firefox crash. part of setup...
-
-### copy firefox advanced settings and enable hw acceleration
-cd $basicsetup/.mozilla/firefox/.default-release
-sudo \cp -rf prefs.js ~/.mozilla/firefox/*.default-release/prefs.js
-cd $source
-
-### install firefox modules
-yes | firefox https://addons.mozilla.org/firefox/downloads/file/3539016/adblock_plus-*
-yes | firefox https://addons.mozilla.org/firefox/downloads/file/3560936/duckduckgo_privacy_essentials-*
-yes | firefox https://addons.mozilla.org/firefox/downloads/file/3502002/youtube_audio_only-*
-yes | firefox https://addons.mozilla.org/firefox/downloads/file/3053229/adblocker_for_youtubetm-*
-yes | firefox https://addons.mozilla.org/firefox/downloads/file/3553672/youtube_video_and_audio_downloader_webex-
-yes | firefox https://addons.mozilla.org/firefox/downloads/file/3550879/plasma_integration-*
-yes | firefox https://addons.mozilla.org/firefox/downloads/file/3534334/video_downloadhelper-*
-yes | firefox https://addons.mozilla.org/firefox/downloads/file/805784/kde_connect-*
-yes | firefox https://addons.mozilla.org/firefox/downloads/file/3547657/hotspot_shield_free_vpn_proxy_unlimited_vpn-*
+# ### fix ownership preconfig - rare cases
+# cd ~/ && sudo chown -R $(id -u):$(id -g) $HOME
 
 
+# ####### FIREFOX CONFIGURATION
+# ### installation firefox addons, install as firefox opens. close firefox and reclick on console ###############
+# echo -e "${magenta}"                                                                                          #
+# echo INSTALL FIREFOX ADDONS ONE BY ONE, AFTER CLOSE FIREFOX AND CLICK ON CLI TILL ALL ADDONS ARE INSTALLED!!! #
+# echo -e "${restore}"                                                                                          #
+# ###############################################################################################################
+# sudo pkill firefox
+# echo sorry for that firefox crash. part of setup...
 
+# ### copy firefox advanced settings and enable hw acceleration
+# cd $basicsetup/.mozilla/firefox/.default-release
+# sudo \cp -rf prefs.js ~/.mozilla/firefox/*.default-release/prefs.js
+# cd $source
 
-####### SWAP CONFIGURATION ##########################################################################
-#####################################################################################################
-### configure swap               #
-echo -e "${yellow}"              #
-echo CONFIGURE SWAP              #
-echo -e "${restore}"             #
-##################################
-swap=5000000
-swappiness=90
-##################################
-if grep -q "/swapfile" /etc/fstab
-then
-echo "Flag exists"
-else
-sudo sed -i "\$a/swapfile    none    swap    sw    0    0" /etc/fstab
-fi
-sudo swapoff -a
-sudo dd if=/dev/zero of=/swapfile bs=$swap count=1024
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon -a
-sudo free -h
-### set swappiness to a low value for ram preference
-sudo sysctl vm.swappiness=$swappiness
-### LVM
-#/vgkubuntu-swap_1
+# ### install firefox modules
+# yes | firefox https://addons.mozilla.org/firefox/downloads/file/3539016/adblock_plus-*
+# yes | firefox https://addons.mozilla.org/firefox/downloads/file/3560936/duckduckgo_privacy_essentials-*
+# yes | firefox https://addons.mozilla.org/firefox/downloads/file/3502002/youtube_audio_only-*
+# yes | firefox https://addons.mozilla.org/firefox/downloads/file/3053229/adblocker_for_youtubetm-*
+# yes | firefox https://addons.mozilla.org/firefox/downloads/file/3553672/youtube_video_and_audio_downloader_webex-
+# yes | firefox https://addons.mozilla.org/firefox/downloads/file/3550879/plasma_integration-*
+# yes | firefox https://addons.mozilla.org/firefox/downloads/file/3534334/video_downloadhelper-*
+# yes | firefox https://addons.mozilla.org/firefox/downloads/file/805784/kde_connect-*
+# yes | firefox https://addons.mozilla.org/firefox/downloads/file/3547657/hotspot_shield_free_vpn_proxy_unlimited_vpn-*
 
 
 
 
-####### SYSTEM CONFIGURATION ########################################################################
-#####################################################################################################
-### grub config & system optimization
-echo -e "${yellow}"                 #
-echo GRUB CONFIG                    #
-echo -e "${restore}"                #
-#####################################
-### switch off mitigations improving linux performance
-sudo sed -i '/GRUB_CMDLINE_LINUX_DEFAULT/c\GRUB_CMDLINE_LINUX_DEFAULT="quiet splash udev.log_priority=3 audit=0 noibrs noibpb nopti nospectre_v2 nospectre_v1 l1tf=off nospec_store_bypass_disable no_stf_barrier pti=off mds=off spectre_v1=off spectre_v2_user=off spec_store_bypass_disable=off mitigations=off scsi_mod.use_blk_mq=1 idle=poll tsx_async_abort=off elevator=none i915.enable_rc6=0"' /etc/default/grub
-sudo sed -i '/GRUB_CMDLINE_LINUX/c\GRUB_CMDLINE_LINUX="quiet splash udev.log_priority=3 audit=0 noibrs noibpb nopti nospectre_v2 nospectre_v1 l1tf=off nospec_store_bypass_disable no_stf_barrier pti=off mds=off spectre_v1=off spectre_v2_user=off spec_store_bypass_disable=off mitigations=off scsi_mod.use_blk_mq=1 idle=poll tsx_async_abort=off elevator=none i915.enable_rc6=0"' /etc/default/grub
-### set grub timeout
-sudo sed -i "/GRUB_TIMEOUT/c\GRUB_TIMEOUT=1" /etc/default/grub
-### set grub min resolution
-sudo sed -i "/GRUB_GFXMODE/c\GRUB_GFXMODE=1024x768" /etc/default/grub
-### set grub wallpaper
-sudo sed -i '/GRUB_BACKGROUND/c\GRUB_BACKGROUND="/boot/grub/splash.jpg"' /etc/default/grub
-### apply grub settings
-sudo update-grub2
-### grub auto detection
-GRUB_PATH=$(sudo fdisk -l | grep '^/dev/[a-z]*[0-9]' | awk '$2 == "*"' | cut -d" " -f1 | cut -c1-8)
-sudo grub-install $GRUB_PATH
+# ####### SWAP CONFIGURATION ##########################################################################
+# #####################################################################################################
+# ### configure swap               #
+# echo -e "${yellow}"              #
+# echo CONFIGURE SWAP              #
+# echo -e "${restore}"             #
+# ##################################
+# swap=5000000
+# swappiness=90
+# ##################################
+# if grep -q "/swapfile" /etc/fstab
+# then
+# echo "Flag exists"
+# else
+# sudo sed -i "\$a/swapfile    none    swap    sw    0    0" /etc/fstab
+# fi
+# sudo swapoff -a
+# sudo dd if=/dev/zero of=/swapfile bs=$swap count=1024
+# sudo chmod 600 /swapfile
+# sudo mkswap /swapfile
+# sudo swapon -a
+# sudo free -h
+# ### set swappiness to a low value for ram preference
+# sudo sysctl vm.swappiness=$swappiness
+# ### LVM
+# #/vgkubuntu-swap_1
+
+
+
+
+# ####### SYSTEM CONFIGURATION ########################################################################
+# #####################################################################################################
+# ### grub config & system optimization
+# echo -e "${yellow}"                 #
+# echo GRUB CONFIG                    #
+# echo -e "${restore}"                #
+# #####################################
+# ### switch off mitigations improving linux performance
+# sudo sed -i '/GRUB_CMDLINE_LINUX_DEFAULT/c\GRUB_CMDLINE_LINUX_DEFAULT="quiet splash udev.log_priority=3 audit=0 noibrs noibpb nopti nospectre_v2 nospectre_v1 l1tf=off nospec_store_bypass_disable no_stf_barrier pti=off mds=off spectre_v1=off spectre_v2_user=off spec_store_bypass_disable=off mitigations=off scsi_mod.use_blk_mq=1 idle=poll tsx_async_abort=off elevator=none i915.enable_rc6=0"' /etc/default/grub
+# sudo sed -i '/GRUB_CMDLINE_LINUX/c\GRUB_CMDLINE_LINUX="quiet splash udev.log_priority=3 audit=0 noibrs noibpb nopti nospectre_v2 nospectre_v1 l1tf=off nospec_store_bypass_disable no_stf_barrier pti=off mds=off spectre_v1=off spectre_v2_user=off spec_store_bypass_disable=off mitigations=off scsi_mod.use_blk_mq=1 idle=poll tsx_async_abort=off elevator=none i915.enable_rc6=0"' /etc/default/grub
+# ### set grub timeout
+# sudo sed -i "/GRUB_TIMEOUT/c\GRUB_TIMEOUT=1" /etc/default/grub
+# ### set grub min resolution
+# sudo sed -i "/GRUB_GFXMODE/c\GRUB_GFXMODE=1024x768" /etc/default/grub
+# ### set grub wallpaper
+# sudo sed -i '/GRUB_BACKGROUND/c\GRUB_BACKGROUND="/boot/grub/splash.jpg"' /etc/default/grub
+# ### apply grub settings
+# sudo update-grub2
+# ### grub auto detection
+# GRUB_PATH=$(sudo fdisk -l | grep '^/dev/[a-z]*[0-9]' | awk '$2 == "*"' | cut -d" " -f1 | cut -c1-8)
+# sudo grub-install $GRUB_PATH
 
 ### preconfigure ccache and mute output
 if grep -q "USE_CCACHE=1" ~/.bashrc
@@ -229,30 +229,30 @@ sudo sed -i "\$aexport CCACHE_DIR=~/.ccache" ~/.bashrc
 sudo sed -i "\$accache -M 30G >/dev/null" ~/.bashrc
 fi
 
-### fstab flags
-### ext4
-if grep -q "noatime" /etc/fstab
-then
-echo "Flag exists"
-else
-sudo sed -i 's/errors=remount-ro/commit=60,discard,quota,lazytime,nodiratime,errors=remount-ro/g' /etc/fstab
-fi
-### xfs
-if grep -q "noatime" /etc/fstab
-then
-echo "Flag exists"
-else
-sudo sed -i 's/xfs     defaults/xfs     defaults,quota,discard,lazytime,noatime,nodiratime/g' /etc/fstab
-fi
-### tmpfs
-if grep -q "tmpfs" /etc/fstab
-then
-echo "Flag exists"
-else
-  sudo sed -i "\$atmpfs    /tmp        tmpfs    rw,defaults,lazytime,noatime,nodiratime,mode=1777 0 0" /etc/fstab
-  sudo sed -i "\$atmpfs    /var/tmp    tmpfs    rw,defaults,lazytime,noatime,nodiratime,mode=1777 0 0" /etc/fstab
-  sudo sed -i "\$atmpfs    /run/shm    tmpfs    rw,defaults,lazytime,noatime,nodiratime,mode=1777 0 0" /etc/fstab
-fi
+# ### fstab flags
+# ### ext4
+# if grep -q "noatime" /etc/fstab
+# then
+# echo "Flag exists"
+# else
+# sudo sed -i 's/errors=remount-ro/commit=60,discard,quota,lazytime,nodiratime,errors=remount-ro/g' /etc/fstab
+# fi
+# ### xfs
+# if grep -q "noatime" /etc/fstab
+# then
+# echo "Flag exists"
+# else
+# sudo sed -i 's/xfs     defaults/xfs     defaults,quota,discard,lazytime,noatime,nodiratime/g' /etc/fstab
+# fi
+# ### tmpfs
+# if grep -q "tmpfs" /etc/fstab
+# then
+# echo "Flag exists"
+# else
+#   sudo sed -i "\$atmpfs    /tmp        tmpfs    rw,defaults,lazytime,noatime,nodiratime,mode=1777 0 0" /etc/fstab
+#   sudo sed -i "\$atmpfs    /var/tmp    tmpfs    rw,defaults,lazytime,noatime,nodiratime,mode=1777 0 0" /etc/fstab
+#   sudo sed -i "\$atmpfs    /run/shm    tmpfs    rw,defaults,lazytime,noatime,nodiratime,mode=1777 0 0" /etc/fstab
+# fi
 
 
 
@@ -348,16 +348,16 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3729827454b8c8ac
 ##################################
 ####### PPA'S
 ### mesa drivers and extras
-sudo add-apt-repository -y ppa:oibaf/graphics-drivers
-sudo add-apt-repository -y ppa:git-core/ppa
-sudo add-apt-repository -y ppa:team-xbmc/ppa
-sudo add-apt-repository -y ppa:appimagelauncher-team/stable
+# sudo add-apt-repository -y ppa:oibaf/graphics-drivers
+# sudo add-apt-repository -y ppa:git-core/ppa
+# sudo add-apt-repository -y ppa:team-xbmc/ppa
+# sudo add-apt-repository -y ppa:appimagelauncher-team/stable
 
 ### fix focal/groovy distro syncing for now (forceful method - for now must be overridden)
-sudo bash -c 'echo "deb http://ppa.launchpad.net/team-xbmc/ppa/ubuntu focal main"  > /etc/apt/sources.list.d/team-xbmc-ubuntu-ppa-*.list'
-sudo bash -c 'echo "deb http://ppa.launchpad.net/git-core/ppa/ubuntu focal main"  > /etc/apt/sources.list.d/git-core-ubuntu-ppa-*.list'
-sudo bash -c 'echo "deb http://ppa.launchpad.net/git-core/ppa/ubuntu focal main"  > /etc/apt/sources.list.d/git-core-ubuntu-ppa-*.list'
-sudo bash -c 'echo "deb http://ppa.launchpad.net/appimagelauncher-team/stable/ubuntu focal main" > /etc/apt/sources.list.d/appimagelauncher-team-ubuntu-stable-*.list'
+# sudo bash -c 'echo "deb http://ppa.launchpad.net/team-xbmc/ppa/ubuntu focal main"  > /etc/apt/sources.list.d/team-xbmc-ubuntu-ppa-*.list'
+# sudo bash -c 'echo "deb http://ppa.launchpad.net/git-core/ppa/ubuntu focal main"  > /etc/apt/sources.list.d/git-core-ubuntu-ppa-*.list'
+# sudo bash -c 'echo "deb http://ppa.launchpad.net/git-core/ppa/ubuntu focal main"  > /etc/apt/sources.list.d/git-core-ubuntu-ppa-*.list'
+# sudo bash -c 'echo "deb http://ppa.launchpad.net/appimagelauncher-team/stable/ubuntu focal main" > /etc/apt/sources.list.d/appimagelauncher-team-ubuntu-stable-*.list'
 
 
 
@@ -401,80 +401,80 @@ sudo aptitude -f install -y gcc clang binutils make flex bison bc build-essentia
 sudo aptitude -f install -y zlib1g zlib1g-dev libcryptsetup12 libcryptsetup-dev libjansson4 libjansson-dev
 
 ### kde
-sudo aptitude install -y muon kde-baseapps kde-plasma-desktop plasma-browser-integration
+#sudo aptitude install -y muon kde-baseapps kde-plasma-desktop plasma-browser-integration
 
 ### npm
-sudo apt -f install -y npm && sudo apt -f install -y && sudo npm cache clean -f && sudo npm cache clean -f && sudo npm install npm@latest -g
+#sudo apt -f install -y npm && sudo apt -f install -y && sudo npm cache clean -f && sudo npm cache clean -f && sudo npm install npm@latest -g
 
 ### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ### SELECT EXPLICITLY FOR KDE PLASMA DESKTOP ENVIRONMENT! needs manual enabling from within settings
-sudo apt install -y plasma-workspace-wayland kwayland-integration wayland-protocols
+#sudo apt install -y plasma-workspace-wayland kwayland-integration wayland-protocols
 ### allow root privilege under wayland and supress output
-if grep -q "xhost +si:localuser:root >/dev/null" ~/.bashrc
-then
-echo "Flag exists"
-else
-sudo sed -i "\$axhost +si:localuser:root >/dev/null" ~/.bashrc
-fi
+# if grep -q "xhost +si:localuser:root >/dev/null" ~/.bashrc
+# then
+# echo "Flag exists"
+# else
+# sudo sed -i "\$axhost +si:localuser:root >/dev/null" ~/.bashrc
+# fi
 ### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ### extra thanas packages
 ### some listed purposefully seperate to avoid future conflicts or to distinguish packages from unique repo's or ppa's
-sudo aptitude -f install -y audacity diffuse gimp kodi kodi-pvr-hts kodi-x11 kodi-wayland f2fs-tools rt-tests uget net-tools aircrack-ng wine32 wine shellcheck gnome-disk-utility putty
+#sudo aptitude -f install -y audacity diffuse gimp kodi kodi-pvr-hts kodi-x11 kodi-wayland f2fs-tools rt-tests uget net-tools aircrack-ng wine32 wine shellcheck gnome-disk-utility putty
 
 ### make sure all is set up right
 sudo dpkg --configure -a && sudo apt update && sudo apt -f upgrade -y && sudo apt -f --fix-broken install -y && sudo apt -f --fix-missing install -y && sudo apt autoremove -y
 
-sudo aptitude -f install -y appimagelauncher
+#sudo aptitude -f install -y appimagelauncher
 
-sudo aptitude -f install -y x264 x265
+#sudo aptitude -f install -y x264 x265
 
 ### make sure all is set up right
 sudo dpkg --configure -a && sudo apt update && sudo apt -f upgrade -y && sudo apt -f --fix-broken install -y && sudo apt -f --fix-missing install -y && sudo apt autoremove -y
 
 ### .exe files for wine
-mkdir -p ~/wine && cd ~/wine
-wget https://winscp.net/download/files/202005080143368dd0551d11a66577d4727edb0182a2/WinSCP-5.17.5-Portable.zip
-unzip -o WinSCP*
-rm -rf license* readme* WinSCP*.zip WinSCP*.com
+# mkdir -p ~/wine && cd ~/wine
+# wget https://winscp.net/download/files/202005080143368dd0551d11a66577d4727edb0182a2/WinSCP-5.17.5-Portable.zip
+# unzip -o WinSCP*
+# rm -rf license* readme* WinSCP*.zip WinSCP*.com
 
-### extra .deb packages
-cd $source
-#
-wget https://github.com/balena-io/etcher/releases/download/v1.5.89/balena-etcher-electron_1.5.89_amd64.deb
-sudo dpkg -i balena-etcher*
-sudo apt -f install -y && sudo apt --fix-broken install -y
-rm -rf balena-etcher*
+# ### extra .deb packages
+# cd $source
+# #
+# wget https://github.com/balena-io/etcher/releases/download/v1.5.89/balena-etcher-electron_1.5.89_amd64.deb
+# sudo dpkg -i balena-etcher*
+# sudo apt -f install -y && sudo apt --fix-broken install -y
+# rm -rf balena-etcher*
 
-wget https://download.cdn.viber.com/cdn/desktop/Linux/viber.deb
-sudo dpkg -i viber*
-sudo apt -f install -y && sudo apt --fix-broken install -y
-rm -rf viber*
+# wget https://download.cdn.viber.com/cdn/desktop/Linux/viber.deb
+# sudo dpkg -i viber*
+# sudo apt -f install -y && sudo apt --fix-broken install -y
+# rm -rf viber*
 
-wget https://phoronix-test-suite.com/releases/repo/pts.debian/files/phoronix-test-suite_9.6.0_all.deb
-sudo dpkg -i phoronix*
-sudo apt -f install -y && sudo apt --fix-broken install -y
-rm -rf phoronix*
+# wget https://phoronix-test-suite.com/releases/repo/pts.debian/files/phoronix-test-suite_9.6.0_all.deb
+# sudo dpkg -i phoronix*
+# sudo apt -f install -y && sudo apt --fix-broken install -y
+# rm -rf phoronix*
 
-wget https://atom.io/download/deb
-sudo dpkg -i deb*
-sudo apt -f install -y && sudo apt --fix-broken install -y
-rm -rf deb*
+# wget https://atom.io/download/deb
+# sudo dpkg -i deb*
+# sudo apt -f install -y && sudo apt --fix-broken install -y
+# rm -rf deb*
 
-wget https://launchpad.net/~teejee2008/+archive/ubuntu/ppa/+files/ukuu_18.9.3-0~201902031503~ubuntu18.04.1_amd64.deb
-sudo dpkg -i ukuu*
-sudo apt -f install -y && sudo apt --fix-broken install -y
-rm -rf ukuu*
+# wget https://launchpad.net/~teejee2008/+archive/ubuntu/ppa/+files/ukuu_18.9.3-0~201902031503~ubuntu18.04.1_amd64.deb
+# sudo dpkg -i ukuu*
+# sudo apt -f install -y && sudo apt --fix-broken install -y
+# rm -rf ukuu*
 
-wget https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
-sudo dpkg -i teamviewer*
-sudo apt -f install -y && sudo apt --fix-broken install -y
-rm -rf teamviewer*
+# wget https://download.teamviewer.com/download/linux/teamviewer_amd64.deb
+# sudo dpkg -i teamviewer*
+# sudo apt -f install -y && sudo apt --fix-broken install -y
+# rm -rf teamviewer*
 
-wget https://github.com/shiftkey/desktop/releases/download/release-2.4.1-linux2/GitHubDesktop-linux-2.4.1-linux2.deb
-sudo dpkg -i GitHubDesktop*
-sudo apt -f install -y && sudo apt --fix-broken install -y
-rm -rf GitHubDesktop*
+# wget https://github.com/shiftkey/desktop/releases/download/release-2.4.1-linux2/GitHubDesktop-linux-2.4.1-linux2.deb
+# sudo dpkg -i GitHubDesktop*
+# sudo apt -f install -y && sudo apt --fix-broken install -y
+# rm -rf GitHubDesktop*
 
 ### ensure packages are well installed
 sudo apt update && sudo apt -f install -y && sudo apt --fix-broken install -y
@@ -489,25 +489,25 @@ else
 sudo sed -i "\$aexport PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:$PATH'" ~/.bashrc
 fi
 sleep 5
-### extras from snap
-sudo snap install gitkraken --edge
-sudo snap install telegram-desktop --edge
-sudo snap install discord --edge
-sudo snap install anbox --edge --devmode
+#### extras from snap
+# sudo snap install gitkraken --edge
+# sudo snap install telegram-desktop --edge
+# sudo snap install discord --edge
+# sudo snap install anbox --edge --devmode
 
 ### anbox modules fix - run android android/apps within linux
-cd $git
-#
-sudo apt -f install -y linux-headers-generic
-git clone https://github.com/thanasxda/anbox-modules-fix.git
-cd anbox-modules-fix
-sudo ./anbox_modules_fix.sh
-sudo apt -f install -y
+# cd $git
+# #
+# sudo apt -f install -y linux-headers-generic
+# git clone https://github.com/thanasxda/anbox-modules-fix.git
+# cd anbox-modules-fix
+# sudo ./anbox_modules_fix.sh
+# sudo apt -f install -y
 
-### usb stuff
-sudo add-apt-repository -y ppa:mkusb/ppa
-sudo apt update
-sudo apt -f install --install-recommends -y mkusb mkusb-nox usb-pack-efi
+# ### usb stuff
+# sudo add-apt-repository -y ppa:mkusb/ppa
+# sudo apt update
+# sudo apt -f install --install-recommends -y mkusb mkusb-nox usb-pack-efi
 
 
 
@@ -527,16 +527,16 @@ git clone https://github.com/ClangBuiltLinux/tc-build.git
 git clone https://github.com/USBhost/build-tools-gcc.git
 
 ### android image kitchen
-git clone https://github.com/thanasxda/AIK.git
+# git clone https://github.com/thanasxda/AIK.git
 
-### anykernel3 with sdm845 malakas configuration
-git clone https://github.com/thanasxda/AnyKernel3.git
+# ### anykernel3 with sdm845 malakas configuration
+# git clone https://github.com/thanasxda/AnyKernel3.git
 
-### katoolin script
-git clone https://github.com/LionSec/katoolin.git
+# ### katoolin script
+# git clone https://github.com/LionSec/katoolin.git
 
-### whereisbssid script
-git clone --depth=1 https://github.com/Trackbool/WhereIsBSSID.git
+# ### whereisbssid script
+# git clone --depth=1 https://github.com/Trackbool/WhereIsBSSID.git
 
 ### prebuilt llvm tc with lto=full pgo polly support
 cd $tc
@@ -546,13 +546,11 @@ mv twisted-clang clang
 cd $source
 
 ### microcode
-sudo apt remove -y intel-microcode
-sudo apt remove -y amd-microcode
-
+#
 ### make sure all is set up right
 sudo dpkg --configure -a && sudo apt update && sudo apt -f full-upgrade -y && sudo apt -f upgrade --with-new-pkgs -y && sudo apt -f --fix-broken install -y && sudo apt -f --fix-missing install -y && sudo apt autoremove -y
 sudo apt autoclean
-sudo aptitude install -y prelink irqbalance && sudo prelink -amR
+#sudo aptitude install -y prelink irqbalance && sudo prelink -amR
 
 
 
